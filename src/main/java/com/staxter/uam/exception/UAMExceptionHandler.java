@@ -27,7 +27,7 @@ public class UAMExceptionHandler extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(ex, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
-	@ExceptionHandler(value = { UserAccessException.class })
+	@ExceptionHandler(value = { UserAlreadyExistsException.class })
 	public ResponseEntity<Object> handleUserAccessException(Exception ex, WebRequest request) {
 
 		String errorCode = ex.getMessage();

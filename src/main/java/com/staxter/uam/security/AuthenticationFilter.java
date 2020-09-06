@@ -19,7 +19,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.staxter.uam.exception.UserAccessException;
+import com.staxter.uam.exception.UserAlreadyExistsException;
 import com.staxter.uam.ui.model.request.UserLogin;
 import com.staxter.uam.ui.service.UserRepository;
 import com.staxter.uam.utility.Constants;
@@ -57,12 +57,12 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 		try {
 
 			creds = new ObjectMapper().readValue(request.getInputStream(), UserLogin.class);
-			throw new UserAccessException(Constants.USER_AUTHENTICATION_FAILED);
-		//	return getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(creds.getUserName(),
-		//			creds.getPassword(), new ArrayList<>()));
+			
+			return getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(creds.getUserName(),
+				creds.getPassword(), new ArrayList<>()));
 		} catch (IOException e) {
-			logger.error("An exception occured in attemptAuthentication() method inside class AuthenticationFilter");
-			throw new UserAccessException(Constants.USER_AUTHENTICATION_FAILED);
+			logger.error("An exception occured in attemptAuthentication() method inside class AuthenticationFilter"+e.getMessage());
+			throw new RuntimeException(e);
 		}
 
 	}

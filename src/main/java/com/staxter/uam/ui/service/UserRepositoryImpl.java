@@ -11,7 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.staxter.uam.dto.User;
-import com.staxter.uam.exception.UserAccessException;
+import com.staxter.uam.exception.UserAlreadyExistsException;
 import com.staxter.uam.utility.Constants;
 import com.staxter.uam.utility.Utils;
 /*
@@ -47,17 +47,16 @@ public class UserRepositoryImpl implements UserRepository {
 	 * 
 	 * */
 	
-	public User createUser(User user)  {
+	public User createUser(User user) throws UserAlreadyExistsException {
 		if(users==null) users=new HashMap<>();
 		
 		// User existing = users.findOne(user.getId());
 		if(users.containsKey(user.getUserName())) 
-			throw new UserAccessException(Constants.USER_ALREADY_EXISTS);
+			throw new UserAlreadyExistsException(Constants.USER_ALREADY_EXISTS);
 		user.setId(utils.generateUserId()); 
 		user.setHashedPassword(bCryptPasswordEncoder.encode(user.getPlainTextPassword()));
 		System.out.println(user.getHashedPassword());
 		users.put(user.getUserName(), user);
-		
 		return user;
 	}
 
